@@ -46,18 +46,20 @@ import { revalidatePath } from 'next/cache';
 //   }
 // ];
 
+
+
 const supabase = createServerComponentClient({ cookies });
-
-  const { data: Questions } = await supabase.from("questions").select();
-
-
-
 
 
 
 export default async function Home() {
 
+  const { data: Questions } = await supabase.from("questions").select();
+
+
+
   
+
   async function handleSubmit(formData) {
     'use server'
     // ...
