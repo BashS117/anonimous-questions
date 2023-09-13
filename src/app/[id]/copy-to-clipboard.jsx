@@ -3,10 +3,15 @@
 
 export default function CopyQuestionToClipboard ()  {
 async function handleClick(){
-    const image=await fetch(`${location.pathname}/opengraph`);
-    await navigator.clipboard.writeText(location.href);
+    const image=await fetch(`${location.pathname}/opengraph-image`).then(res=>res.blob());
+    await navigator.clipboard.write([
+        new ClipboardItem({
+            [image.type]: image, 
+        })
+    ]);
+
+    alert("copiado al portapapeles")
 }
-console.log(location.pathname)
   return (
   <button 
   onClick={handleClick}
@@ -18,4 +23,14 @@ console.log(location.pathname)
     </button>
   );
 
+
+
+
 }
+
+
+
+
+
+
+

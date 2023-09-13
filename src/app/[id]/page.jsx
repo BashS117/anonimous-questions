@@ -20,7 +20,6 @@ export default async function Question({params: {id}}) {
   
    <article className='grid gap-4'>
     
-  <copyQuestionToClipboard/>
     <Link href="/" > ← Volver atrás</Link>
      <section  className="grid">
     <p className='bg-pink-500 text-white p-4 rounded-t-lg text-xl font-medium'>Questioncy</p>
