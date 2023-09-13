@@ -1,17 +1,27 @@
 import Image from 'next/image'
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
 import Link from 'next/link';
+import { createClient } from '@supabase/supabase-js'
 
 
-const supabase = createServerComponentClient({ cookies });
+const supabaseUrl = 'https://kogezxjfuixqqiarnnxo.supabase.co'
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabase = createClient(supabaseUrl,supabaseKey)
+
+
+
 
 
 
 export default async function Question({params: {id}}) {
 
 
-   const  {data:Question}  = await supabase.from("questions").select().eq("id",id).single();
+
+  let { data: Question, error } = await supabase
+  .from('Questions')
+  .select("*")
+  .eq("id",id)
+  .single()
+
 
 
   return (

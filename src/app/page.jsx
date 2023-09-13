@@ -1,22 +1,31 @@
 import Image from 'next/image'
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { createClient } from '@supabase/supabase-js'
+
+
+const supabaseUrl = 'https://kogezxjfuixqqiarnnxo.supabase.co'
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabase = createClient(supabaseUrl,supabaseKey)
 
 
 
 
+async function getQuestions(){
 
-const supabase = createServerComponentClient({ cookies });
+  let { data: Questions, error } = await supabase
+  .from('Questions')
+  .select('*')
 
+  return Questions
+
+}
 
 
 export default async function Home() {
 
-
-  const { data: Questions } = await supabase.from("questions").select();
 
   async function handleSubmit(formData) {
     'use server'
@@ -24,8 +33,15 @@ export default async function Home() {
     // console.log("VALO: ", formData.get("question"))
     const question = formData.get("question");
     const id = Date.now().toString();
-    await supabase.from("questions").insert({text: question, id});
+    // await supabase.from("questions").insert({text: question, id});
 
+    const { data, error } = await supabase
+    .from('Questions')
+    .insert([
+      { text: question, id },
+    ])
+    .select()
+  
     revalidatePath("/");
     redirect(`/${id}`);
   
@@ -33,7 +49,7 @@ export default async function Home() {
   }
   
 
-  
+  const questions = await getQuestions();
   
 
   return (
@@ -50,7 +66,7 @@ export default async function Home() {
       <hr className='border-b border-pink-500 mt-1 mb-1 opacity-30' />
 
       <article className='grid  grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-4 items-start'>
-        {Questions?.map((question) =>
+        {questions?.map((question) =>
 
           <Link  key={question.id} className="grid" href={`/${question.id}`}>
             <p className='bg-pink-500 text-white p-4 rounded-t-lg text-xl font-medium'>Questioncy</p>
